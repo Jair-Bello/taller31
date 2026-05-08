@@ -3,33 +3,107 @@
 
 <head>
     <meta charset="UTF-8">
-    <title>Taller 3-1: taller31</title>
+    <title>Taller 3-1: Cohen-Sutherland</title>
     <style>
         body {
+            font-family: 'Segoe UI', sans-serif;
             display: flex;
             flex-direction: column;
             align-items: center;
-            background: #f0f0f0;
+            background: #f0f2f5;
+            padding: 20px;
+        }
+        
+        .container {
+            background: white;
+            padding: 20px;
+            border-radius: 12px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
         }
         
         canvas {
-            background: white;
-            border: 1px solid #000;
-            margin-top: 20px;
+            border: 2px solid #34495e;
+            background: #fff;
+            margin-top: 15px;
+            display: block;
+        }
+        
+        .controls {
+            margin-bottom: 20px;
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+        
+        .input-group {
+            display: flex;
+            justify-content: center;
+            gap: 10px;
+            align-items: center;
+            flex-wrap: wrap;
+        }
+        
+        input {
+            width: 50px;
+            padding: 5px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+        }
+        
+        button {
+            padding: 8px 16px;
+            cursor: pointer;
+            background: #2ecc71;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            font-weight: bold;
+        }
+        
+        button:hover {
+            background: #27ae60;
+        }
+        
+        .info {
+            background: #f8f9fa;
+            padding: 15px;
+            border-left: 5px solid #3498db;
+            margin-top: 15px;
         }
     </style>
 </head>
 
 <body>
 
-    <div style="margin: 10px;">
-        <button onclick="cambiarEscena(-1)">Anterior</button>
-        <span id="txtEscena">Escena 1 de 5</span>
-        <button onclick="cambiarEscena(1)">Siguiente</button>
+    <div class="container">
+        <h2>Algoritmo de Recorte Cohen-Sutherland</h2>
+
+        <div class="controls">
+            <div class="input-group">
+                <strong>Ventana (Min X,Y - Max X,Y):</strong>
+                <input type="number" id="xmin" value="100">
+                <input type="number" id="ymin" value="100">
+                <input type="number" id="xmax" value="300">
+                <input type="number" id="ymax" value="300">
+                <button onclick="actualizarVentana()">Actualizar</button>
+            </div>
+
+            <div class="input-group">
+                <button onclick="cambiarEscena(-1)" style="background:#3498db">« Anterior</button>
+                <span id="txtEscena" style="min-width: 120px; font-weight: bold;">Escena 1 de 5</span>
+                <button onclick="cambiarEscena(1)" style="background:#3498db">Siguiente »</button>
+            </div>
+        </div>
+
+        <canvas id="canvasClip" width="400" height="400"></canvas>
+
+        <div class="info">
+            <div id="descCaso" style="color: #2c3e50; font-weight: bold; margin-bottom: 5px;"></div>
+            <div id="puntosOriginales">P1: -- | P2: --</div>
+            <div id="puntosRecortados" style="color: #e67e22; font-weight: bold; margin-top: 5px;">Recorte: --</div>
+        </div>
     </div>
 
-    <h2>Algoritmo de Recorte Cohen-Sutherland</h2>
-    <canvas id="canvasClip" width="400" height="400"></canvas>
     <script src="script.js"></script>
 </body>
 

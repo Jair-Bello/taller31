@@ -27,14 +27,7 @@ function dibujarViewport() {
     ctx.setLineDash([]);
 }
 
-function calcularCodigo(x, y) {
-    let codigo = INSIDE;
-    if (x < X_MIN) codigo |= LEFT;
-    else if (x > X_MAX) codigo |= RIGHT;
-    if (y < Y_MIN) codigo |= BOTTOM;
-    else if (y > Y_MAX) codigo |= TOP;
-    return codigo;
-}
+
 
 dibujarViewport();
 
@@ -100,6 +93,14 @@ function render() {
 
 function cambiarEscena(dir) {
     indiceActual = (indiceActual + dir + casosPrueba.length) % casosPrueba.length;
+    render();
+}
+
+function actualizarVentana() {
+    X_MIN = parseInt(document.getElementById('xmin').value);
+    Y_MIN = parseInt(document.getElementById('ymin').value);
+    X_MAX = parseInt(document.getElementById('xmax').value);
+    Y_MAX = parseInt(document.getElementById('ymax').value);
     render();
 }
 render();
