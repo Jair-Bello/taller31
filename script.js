@@ -13,3 +13,15 @@ function dibujarViewport() {
 }
 
 dibujarViewport();
+
+function dibujarLinea(x1, y1, x2, y2, color, ancho) {
+    ctx.beginPath();
+    ctx.lineWidth = ancho;
+    ctx.strokeStyle = color;
+    ctx.moveTo(x1, y1);
+    ctx.lineTo(x2, y2);
+    ctx.stroke();
+}
+
+// Prueba manual
+dibujarLinea(50, 50, 350, 350, "blue", 1);
