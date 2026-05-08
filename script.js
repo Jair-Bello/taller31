@@ -11,6 +11,15 @@ const RIGHT = 2; // 0010
 const BOTTOM = 4; // 0100
 const TOP = 8; // 1000
 
+const casosPrueba = [
+    { p1: { x: 20, y: 20 }, p2: { x: 80, y: 50 }, desc: "Fuera" },
+    { p1: { x: 150, y: 150 }, p2: { x: 250, y: 250 }, desc: "Adentro" },
+    { p1: { x: 50, y: 150 }, p2: { x: 200, y: 200 }, desc: "Parcial" },
+    { p1: { x: 50, y: 150 }, p2: { x: 350, y: 250 }, desc: "Atraviesa" },
+    { p1: { x: 80, y: 80 }, p2: { x: 100, y: 100 }, desc: "Esquina" }
+];
+let indiceActual = 0;
+
 function dibujarViewport() {
     ctx.strokeStyle = "#7f8c8d";
     ctx.setLineDash([5, 5]);
@@ -79,5 +88,18 @@ function cohenSutherland(x1, y1, x2, y2) {
     return accept ? { x1, y1, x2, y2 } : null;
 }
 
-// Prueba manual
-dibujarLinea(50, 50, 350, 350, "blue", 1);
+
+function render() {
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    dibujarViewport();
+    const data = casosPrueba[indiceActual];
+    dibujarLinea(data.p1.x, data.p1.y, data.p2.x, data.p2.y, "#ddd", 1);
+    const r = cohenSutherland(data.p1.x, data.p1.y, data.p2.x, data.p2.y);
+    if (r) dibujarLinea(r.x1, r.y1, r.x2, r.y2, "red", 3);
+}
+
+function cambiarEscena(dir) {
+    indiceActual = (indiceActual + dir + casosPrueba.length) % casosPrueba.length;
+    render();
+}
+render();
