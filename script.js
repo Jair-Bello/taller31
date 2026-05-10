@@ -23,7 +23,7 @@ let indiceActual = 0;
 function dibujarViewport() {
     ctx.strokeStyle = "#7f8c8d";
     ctx.setLineDash([5, 5]);
-    ctx.strokeRect(X_MIN, Y_MIN, X_MAX - X_MIN, Y_MAX - Y_MIN);
+    ctx.strokeRect(X_MIN, Ty(Y_MAX), X_MAX - X_MIN, Y_MAX - Y_MIN);
     ctx.setLineDash([]);
 }
 
@@ -35,8 +35,8 @@ function dibujarLinea(x1, y1, x2, y2, color, ancho) {
     ctx.beginPath();
     ctx.lineWidth = ancho;
     ctx.strokeStyle = color;
-    ctx.moveTo(x1, y1);
-    ctx.lineTo(x2, y2);
+    ctx.moveTo(x1, Ty(y1));
+    ctx.lineTo(x2, Ty(y2));
     ctx.stroke();
 }
 
@@ -85,10 +85,28 @@ function cohenSutherland(x1, y1, x2, y2) {
 function render() {
     ctx.clearRect(0, 0, canvas.width, canvas.height);
     dibujarViewport();
+
     const data = casosPrueba[indiceActual];
+
+    // 1. Actualizar textos descriptivos
+    document.getElementById('txtEscena').innerText = `Escena ${indiceActual + 1} de 5`;
+    document.getElementById('descCaso').innerText = data.desc;
+    document.getElementById('puntosOriginales').innerText = `Línea: p1(${data.p1.x}, ${data.p1.y}) | p2(${data.p2.x}, ${data.p2.y})`;
+
+    // 2. Dibujar línea original (fantasma)
     dibujarLinea(data.p1.x, data.p1.y, data.p2.x, data.p2.y, "#ddd", 1);
+
+    // 3. Ejecutar algoritmo
     const r = cohenSutherland(data.p1.x, data.p1.y, data.p2.x, data.p2.y);
-    if (r) dibujarLinea(r.x1, r.y1, r.x2, r.y2, "red", 3);
+
+    // 4. Mostrar resultados del recorte en el texto
+    const infoRecorte = document.getElementById('puntosRecortados');
+    if (r) {
+        dibujarLinea(r.x1, r.y1, r.x2, r.y2, "red", 3);
+        infoRecorte.innerText = `Recorte: pc1(${Math.round(r.x1)}, ${Math.round(r.y1)}) | pc2(${Math.round(r.x2)}, ${Math.round(r.y2)})`;
+    } else {
+        infoRecorte.innerText = "Recorte: Línea totalmente descartada";
+    }
 }
 
 function cambiarEscena(dir) {
@@ -103,4 +121,18 @@ function actualizarVentana() {
     Y_MAX = parseInt(document.getElementById('ymax').value);
     render();
 }
+
+function Ty(y) {
+    return canvas.height - y; // Invierte el eje Y
+}
+
+function calcularCodigo(x, y) {
+    let codigo = INSIDE;
+    if (x < X_MIN) codigo |= LEFT;
+    else if (x > X_MAX) codigo |= RIGHT;
+    if (y < Y_MIN) codigo |= BOTTOM; // Abajo es menor Y
+    else if (y > Y_MAX) codigo |= TOP; // Arriba es mayor Y
+    return codigo;
+}
+
 render();
